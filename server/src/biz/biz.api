@@ -1,0 +1,65 @@
+syntax = "v1"
+
+info (
+	title:   "go-piblogAPI"
+	desc:    "go-piblog的api文档,提供前端请求所需的各种资源"
+	author:  "scarletborder"
+	email:   "baishuibeef@gmail.com"
+	version: "1.0"
+)
+
+type VersionResp {
+	Version int64 `json:"Version"`
+}
+
+// 调试api
+@server (
+	prefix: /v1
+	group:  test
+)
+service biz-api {
+	@handler ping
+	get /ping
+
+	@handler version
+	get /version returns (VersionResp)
+}
+
+// collection api
+type BlogIdReq {
+	ID string `path:"id"`
+}
+
+type BlogIdsReq {
+	IDs []string `json:"ids"`
+}
+
+type BlogBriefResp {
+	ID    string   `json:"id"`
+	Tags  []string `json:"tags"`
+	Brief string   `json:"brief"`
+}
+
+type BlogDetailResp {
+	ID      string   `json:"id"`
+	Tags    []string `json:"tags"`
+	Content string   `json:"content"`
+}
+
+// 请求缩略图
+// 博文api
+@server (
+	prefix: /v1/blog
+	group:  blogs
+)
+service biz-api {
+	@handler getBlogBrief
+	get /info/:id (BlogIdReq) returns (BlogBriefResp)
+
+	@handler getBlog
+	get /content/:id (BlogIdReq) returns (BlogDetailResp)
+
+	@handler getBlogBriefs
+	post /info (BlogIdsReq) returns ([]BlogBriefResp)
+}
+

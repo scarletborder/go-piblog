@@ -1,0 +1,53 @@
+syntax = "proto3";
+
+package host;
+option go_package="./host";
+
+message UploadBlogReq {
+  string Title = 1;
+  repeated string Tags = 2;
+  string Brief = 3;
+  string Content = 4;
+}
+
+message UploadBlogResp {
+  bool status = 1;
+  string msg = 2;
+  string id = 3; // 上传的博客的id
+}
+
+message DeleteBlogReq {
+  string id = 1;
+}
+
+message DeleteBlogResp {
+  bool status = 1;
+  string msg = 2;
+}
+
+message UploadPicReq{
+  string type = 1; // `base64` or `url`
+  string content = 2;
+}
+
+message UploadPicResp{
+  bool status = 1;
+  string msg = 2;
+  string result = 3;
+}
+
+message DeletePicResp {
+  bool status = 1;
+  string msg = 2;
+}
+
+
+
+service Host {
+  rpc CreateBlog (UploadBlogReq) returns (UploadBlogResp); 
+  rpc UpdateBlog (UploadBlogReq) returns (UploadBlogResp);
+  rpc DeleteBlog (DeleteBlogReq) returns (DeleteBlogResp);
+  
+  rpc UploadPic (UploadPicReq) returns (UploadPicResp);
+  rpc DeletePic (DeleteBlogReq)returns (DeletePicResp);
+}

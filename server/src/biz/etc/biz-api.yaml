@@ -1,0 +1,17 @@
+Name: biz-api
+Host: 127.0.0.1
+Port: 8888
+
+Detail:
+  Version: 1
+
+MongoConfig:
+  Uri: "mongodb://root:root"
+  Host: 127.0.0.1
+  Port: 27017
+  BlogModel:
+    DbName: "blogspot"
+    CollectionName: "blogs"
+  NodeConfs:
+    - Host: 127.0.0.1:6379
+      Weight: 100

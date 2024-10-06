@@ -1,0 +1,29 @@
+Name: host.rpc
+ListenOn: 0.0.0.0:8081
+Etcd:
+  Hosts:
+    - 127.0.0.1:2379
+  Key: host.rpc
+Auth: true # 是否开启 Auth 验证
+StrictControl: true # 是否开启严格模式
+Redis: # 指定 Redis 服务
+  # 指定 Key 在redis为 hash 类型， 这样就可以向redis中的hash写入key(default app)和value(default token)作为验证
+  Key: rpc:auth:host
+  Host: 127.0.0.1:6379
+  Type: node
+  Pass: # 没有设置pass
+
+AuthApps:
+  - App: "MyCli"
+    Token: "SoEasyToken"
+
+MongoConfig:
+  Uri: "mongodb://root:root"
+  Host: 127.0.0.1
+  Port: 27017
+  BlogModel:
+    DbName: "blogspot"
+    CollectionName: "blogs"
+  NodeConfs:
+    - Host: 127.0.0.1:6379
+      Weight: 100
