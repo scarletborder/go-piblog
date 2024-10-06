@@ -1,7 +1,8 @@
 # biz
-访客只读请求博文内容
+为访客只读请求博文内容提供API
 
 ## Example
+### 请求API
 - 测试模块查看biz版本号
     ```bash
     http://127.0.0.1:8888/v1/version
