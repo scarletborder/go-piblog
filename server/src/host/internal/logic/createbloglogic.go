@@ -2,6 +2,7 @@ package logic
 
 import (
 	"context"
+	"errors"
 
 	"host/internal/svc"
 	"host/pb/host"
@@ -26,5 +27,5 @@ func NewCreateBlogLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Create
 func (l *CreateBlogLogic) CreateBlog(in *host.UploadBlogReq) (*host.UploadBlogResp, error) {
 	// todo: add your logic here and delete this line
 
-	return &host.UploadBlogResp{}, nil
+	return &host.UploadBlogResp{Status: false, Msg: "This method is not available"}, errors.New("This method is not available")
 }

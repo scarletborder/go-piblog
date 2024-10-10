@@ -2,6 +2,7 @@ package logic
 
 import (
 	"context"
+	"errors"
 
 	"host/internal/svc"
 	"host/pb/host"
@@ -25,6 +26,18 @@ func NewDeleteBlogLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Delete
 
 func (l *DeleteBlogLogic) DeleteBlog(in *host.DeleteBlogReq) (*host.DeleteBlogResp, error) {
 	// todo: add your logic here and delete this line
+	_id := in.GetId()
+	if _id == "" {
+		return &host.DeleteBlogResp{Status: false, Msg: "no id of blog is provided"}, errors.New("no id of blog is provided")
+	}
+	del_num, err := l.svcCtx.BlogModel.Delete(l.ctx, _id)
+	if err != nil {
+		return &host.DeleteBlogResp{Status: false, Msg: err.Error()}, err
+	}
 
-	return &host.DeleteBlogResp{}, nil
+	if del_num < 1 {
+		return &host.DeleteBlogResp{Status: true, Msg: "no suitable blog with the id is found"}, nil
+	}
+
+	return &host.DeleteBlogResp{Status: true, Msg: "success"}, nil
 }
