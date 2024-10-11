@@ -40,6 +40,7 @@ func (l *GetBlogBriefsLogic) GetBlogBriefs(req *types.BlogIdsReq) (resp []types.
 		}
 		c_brief := types.BlogBriefResp{
 			ID:    c_id,
+			Title: c_res.Title,
 			Tags:  c_res.Tags,
 			Brief: c_res.Brief,
 		}

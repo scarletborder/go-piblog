@@ -14,6 +14,7 @@ type (
 	// and implement the added methods in customBlogModel.
 	BlogModel interface {
 		blogModel
+		GetConn() *monc.Model
 	}
 
 	customBlogModel struct {
@@ -31,4 +32,8 @@ func NewBlogModel(url, db, collection string, c cache.CacheConf) BlogModel {
 
 func NewBlogModelByCfg(url string, cfg config.MongoConfig, c cache.CacheConf) BlogModel {
 	return NewBlogModel(url, cfg.BlogModel.DbName, cfg.BlogModel.CollectionName, c)
+}
+
+func (m *defaultBlogModel) GetConn() *monc.Model {
+	return m.conn
 }

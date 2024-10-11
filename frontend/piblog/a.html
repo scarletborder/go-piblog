@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8">
+    <style>
+        nav {
+            display: flex;
+            /* 使用Flexbox布局 */
+            justify-content: space-between;
+            /* 宽度均匀分布，项目之间的间距默认相等 */
+            background-color: #f0f0f0;
+            /* 可以设置背景色 */
+            padding: 10px;
+            /* 内边距，增加空间感 */
+        }
+
+        nav a {
+            display: inline-block;
+            /* 导航链接保持行内块级元素，以便水平排布 */
+            margin-right: 10px;
+            /* 之间留有间隔 */
+            text-decoration: none;
+            color: black;
+            font-size: 16px;
+        }
+
+        nav a:last-child {
+            /* 最后一个链接无需右侧间距 */
+            margin-right: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <nav>
+        <a href="#">首页</a>
+        <a href="#">关于我们</a>
+        <a href="#">产品中心</a>
+        <a href="#">联系我们</a>
+    </nav>
+</body>
+
+</html>

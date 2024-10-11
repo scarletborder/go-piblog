@@ -15,7 +15,7 @@ type GetBlogBriefLogic struct {
 	svcCtx *svc.ServiceContext
 }
 
-// type 
+// type
 
 func NewGetBlogBriefLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetBlogBriefLogic {
 	return &GetBlogBriefLogic{
@@ -36,6 +36,7 @@ func (l *GetBlogBriefLogic) GetBlogBrief(req *types.BlogIdReq) (resp *types.Blog
 	}
 	resp = &types.BlogBriefResp{
 		ID:    req.ID,
+		Title: res.Title,
 		Brief: res.Brief,
 		Tags:  res.Tags,
 	}

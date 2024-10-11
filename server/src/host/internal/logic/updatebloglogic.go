@@ -41,7 +41,7 @@ func (l *UpdateBlogLogic) UpdateBlog(in *host.UploadBlogReq) (*host.UploadBlogRe
 	} else {
 		resp.Status = true
 		resp.Msg = "success"
-		resp.Id = data.ID.String()
+		resp.Id = data.ID.Hex()
 	}
 	return &resp, err
 }

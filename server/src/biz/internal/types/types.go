@@ -3,12 +3,14 @@ package types
 
 type BlogBriefResp struct {
 	ID    string   `json:"id"`
+	Title string   `json:"title"`
 	Tags  []string `json:"tags"`
 	Brief string   `json:"brief"`
 }
 
 type BlogDetailResp struct {
 	ID      string   `json:"id"`
+	Title   string   `json:"title"`
 	Tags    []string `json:"tags"`
 	Content string   `json:"content"`
 }
@@ -18,6 +20,10 @@ type BlogIdReq struct {
 }
 
 type BlogIdsReq struct {
+	IDs []string `json:"ids"`
+}
+
+type LatestBlogIdsResp struct {
 	IDs []string `json:"ids"`
 }
 

@@ -1,0 +1,24 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+nav {
+  display: flex;
+  /* 使用Flexbox布局 */
+  justify-content: space-between;
+  /* 宽度均匀分布，项目之间的间距默认相等 */
+  background-color: #f0f0f0;
+  /* 可以设置背景色 */
+  padding: 10px;
+  /* 内边距，增加空间感 */
+}

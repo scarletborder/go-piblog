@@ -30,6 +30,7 @@ func (l *GetBlogLogic) GetBlog(req *types.BlogIdReq) (resp *types.BlogDetailResp
 	}
 	resp = &types.BlogDetailResp{
 		ID:      req.ID,
+		Title:   res.Title,
 		Content: res.Content,
 		Tags:    res.Tags,
 	}

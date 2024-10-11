@@ -36,12 +36,14 @@ type BlogIdsReq {
 
 type BlogBriefResp {
 	ID    string   `json:"id"`
+	Title string   `json:"title"`
 	Tags  []string `json:"tags"`
 	Brief string   `json:"brief"`
 }
 
 type BlogDetailResp {
 	ID      string   `json:"id"`
+	Title   string   `json:"title"`
 	Tags    []string `json:"tags"`
 	Content string   `json:"content"`
 }
@@ -61,5 +63,20 @@ service biz-api {
 
 	@handler getBlogBriefs
 	post /info (BlogIdsReq) returns ([]BlogBriefResp)
+}
+
+// recommend api
+type LatestBlogIdsResp {
+	IDs []string `json:"ids"`
+}
+
+// 一些推荐
+@server (
+	prefix: /v1/recommend
+	group:  recommend
+)
+service biz-api {
+	@handler getLatestBlogIds
+	get /blog/latest returns (LatestBlogIdsResp)
 }
 

@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	blogs "biz/internal/handler/blogs"
+	recommend "biz/internal/handler/recommend"
 	test "biz/internal/handler/test"
 	"biz/internal/svc"
 
@@ -31,6 +32,17 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			},
 		},
 		rest.WithPrefix("/v1/blog"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				Method:  http.MethodGet,
+				Path:    "/blog/latest",
+				Handler: recommend.GetLatestBlogIdsHandler(serverCtx),
+			},
+		},
+		rest.WithPrefix("/v1/recommend"),
 	)
 
 	server.AddRoutes(
