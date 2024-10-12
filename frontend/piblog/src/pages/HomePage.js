@@ -24,15 +24,28 @@ const HomePage = () => {
     }, []);
 
     return (
-        <div>
+        <div className='container'>
             <NavBar />
 
-            <h1>test site</h1>
+            <div className='content'>
+                <div className='main'>
+                    <h1>test site</h1>
 
-            <h2>Blog Posts List</h2>
-            <PostList
-                ids={post_ids}
-            />
+                    <h2>Recommend Posts List</h2>
+
+                    <h2>Latest Posts List</h2>
+                    <PostList
+                        ids={post_ids}
+                    />
+                </div>
+
+                <div className='sidebar'>
+                    aaa
+                </div>
+
+            </div>
+
+
         </div>
     );
 };

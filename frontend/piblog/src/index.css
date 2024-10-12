@@ -1,3 +1,16 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  /* 确保html、body和root的高度为100% */
+}
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -5,20 +18,87 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  background-color: #121212;
+  /* 设置全局的深色背景 */
+  color: #e0e0e0;
+  /* 浅色字体，确保在深色背景上可读 */
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+  background-color: #1e1e1e;
+  /* 代码块的背景色也设置为深色 */
+  color: #dcdcdc;
+  /* 代码文字颜色设置为浅色 */
 }
 
-nav {
+.container {
   display: flex;
+  flex-direction: column;
+  height: 100%;
+  /* 高度为100%，确保占据整个页面 */
+}
+
+.nav {
   /* 使用Flexbox布局 */
   justify-content: space-between;
   /* 宽度均匀分布，项目之间的间距默认相等 */
-  background-color: #f0f0f0;
-  /* 可以设置背景色 */
-  padding: 10px;
-  /* 内边距，增加空间感 */
+  background-color: #333;
+  /* 导航栏背景色为深色 */
+  padding: 20px;
+  text-align: center;
+  color: #ffffff;
+  /* 导航栏文本颜色设置为白色 */
+  font-size: 24px;
+  flex-shrink: 0;
+  /* 确保导航栏不被压缩 */
+}
+
+.content {
+  display: flex;
+  flex: 1;
+  /* 让content区域占据剩余的空间 */
+  padding: 20px;
+}
+
+.main {
+  flex: 0 0 75%;
+  /* 左侧内容占75%宽度 */
+  background-color: #1e1e1e;
+  /* 主内容区域背景色为深色 */
+  color: #f0f0f0;
+  /* 文字颜色为浅色 */
+  padding: 20px;
+}
+
+.sidebar {
+  flex: 0 0 25%;
+  /* 右侧内容占25%宽度 */
+  background-color: #292929;
+  /* 侧边栏背景为较深的灰色 */
+  color: #d3d3d3;
+  /* 侧边栏文字颜色为浅色 */
+  padding: 20px;
+}
+
+a {
+  color: #64b5f6;
+  /* 链接使用浅蓝色，和暗色背景形成对比 */
+}
+
+button {
+  background-color: #444;
+  /* 按钮背景色 */
+  color: #fff;
+  /* 按钮文字颜色 */
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #555;
+  /* 按钮悬停时颜色略微变亮 */
 }

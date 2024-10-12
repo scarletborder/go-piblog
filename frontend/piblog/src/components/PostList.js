@@ -39,10 +39,10 @@ function PostList({ ids }) {
     }, [ids]);
 
     return (
-        <ul>
+        <div className="PostList"><ul>
             {liList}
-        </ul>
-    )
+        </ul></div>
+    );
 }
 
 

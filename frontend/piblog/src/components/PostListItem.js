@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 
 function PostListItem({ id, title, tags, brief }) {
     return (
-        <li key={id}>
+        <li className="PostListItem">
             <Link to={`/post/${id}`}>
                 <h4>{title}</h4>
             </Link>
