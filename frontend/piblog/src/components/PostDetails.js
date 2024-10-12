@@ -5,7 +5,12 @@ import rehypeHighlight from 'rehype-highlight';  // 支持代码高亮
 import './PostDetail.css';
 
 function PostDetail(props) {
-    const tag_str = `Tag: ${props.tags.join(" ")}`;
+    var tag_str = "This blog has no tags";
+
+    if (props.tags !== undefined && props.tags !== null) {
+        tag_str = `Tag: ${props.tags.join(" ")}`;
+    }
+
 
     return (
         <div className='PostDetail'>

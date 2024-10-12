@@ -14,7 +14,7 @@ const HomePage = () => {
             .then(response => response.json())
             .then(data => {
                 let ids = data['ids'];
-                if (ids !== undefined) {
+                if (ids !== undefined && ids !== null) {
                     setPostIds(ids);
                 } else {
                     console.log("No data get");

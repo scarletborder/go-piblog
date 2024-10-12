@@ -35,6 +35,7 @@ func ParseDocument(input string) Document {
 
 	// 解析 Title
 	for i, line := range lines {
+		line = strings.TrimPrefix(line, "\ufeff")
 		if strings.HasPrefix(line, "# ") {
 			doc.Title = strings.TrimSpace(strings.TrimPrefix(line, "# "))
 			lines = lines[i+1:]
@@ -43,17 +44,24 @@ func ParseDocument(input string) Document {
 	}
 
 	// 解析 Tags
+	lines[0] = strings.TrimSpace(lines[0])
 	if len(lines) > 0 && strings.HasPrefix(lines[0], "[") && strings.HasSuffix(lines[0], "]") {
 		tagLine := strings.TrimSpace(lines[0])
 		tagLine = strings.Trim(tagLine, "[]")
-		doc.Tags = strings.Split(tagLine, ", ")
+		pre_tags := strings.Split(tagLine, ",")
+		for _, tag_item := range pre_tags {
+			doc.Tags = append(doc.Tags, strings.TrimSpace(tag_item))
+		}
 		lines = lines[1:]
+	} else {
+		doc.Tags = []string{"blank tag"}
 	}
 
 	// 解析 Brief
 	var briefLines []string
 	for i, line := range lines {
-		if line == "" { // 遇到空行停止解析 Brief
+		line = strings.TrimSpace(line)
+		if line == "---" { // 遇到---停止解析 Brief
 			lines = lines[i+1:]
 			break
 		}

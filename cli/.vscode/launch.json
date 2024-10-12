@@ -28,5 +28,17 @@
                 "-u=./NewBlog.md"
             ]
         },
+        {
+            "name": "Upload blog 2",
+            "type": "go",
+            "request": "launch",
+            "mode": "auto",
+            "program": "${fileDirname}",
+            "env": {},
+            "args": [
+                "upload",
+                "-u=实时语音接口文档.md"
+            ]
+        },
     ]
 }
