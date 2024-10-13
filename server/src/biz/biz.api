@@ -80,3 +80,4 @@ service biz-api {
 	get /blog/latest returns (LatestBlogIdsResp)
 }
 
+// Manager API

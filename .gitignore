@@ -1,5 +1,12 @@
 tmp/
 
-*.exe
+# file summon when test
+*_test.md
 
+*.exe
 *.exe~
+
+# data produced by middleware
+data/mongo/*
+data/redis/*
+data/etcd/*
