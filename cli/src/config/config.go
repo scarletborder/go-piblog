@@ -26,10 +26,11 @@ func init() {
 }
 
 const confFile = `HostRpc:
-  Etcd:
-    Hosts:
-      - 127.0.0.1:2379
-    Key: host.rpc
+  # Etcd:
+  #   Hosts:
+  #     - http://localhost:2379
+  #   Key: host.rpc0
+  Target: "127.0.0.1:8081"
   App: "MyCli"
   Token: "SoEasyToken"
 `

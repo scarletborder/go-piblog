@@ -1,7 +1,0 @@
-HostRpc:
-  Etcd:
-    Hosts:
-      - 127.0.0.1:2379
-    Key: host.rpc
-  App: "MyCli"
-  Token: "SoEasyToken"
