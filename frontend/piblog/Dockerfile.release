@@ -24,7 +24,7 @@ COPY --from=build /app/build /usr/share/nginx/html
 # 通过volume实现
 
 # Expose port 80 and 443
-EXPOSE 80 443
+EXPOSE 443
 
 # Start nginx
 CMD ["nginx", "-g", "daemon off;"]
