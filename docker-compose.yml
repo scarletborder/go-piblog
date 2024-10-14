@@ -94,6 +94,8 @@ services:
     volumes:
     - ./frontend/letsencrypt:/etc/letsencrypt  # 挂载证书目录
     - ./frontend/nginx/certbot/www:/var/www/certbot  # 用于 certbot 验证
+    ports:
+    - "80:80"
     environment:
     - LETSENCRYPT_HOST=${LETSENCRYPT_HOST}
     entrypoint: >
