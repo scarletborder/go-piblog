@@ -8,62 +8,59 @@ html,
 body,
 #root {
   height: 100%;
-  /* 确保html、body和root的高度为100% */
 }
-
 
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-
   background-color: #121212;
-  /* 设置全局的深色背景 */
   color: #e0e0e0;
-  /* 浅色字体，确保在深色背景上可读 */
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
   background-color: #1e1e1e;
-  /* 代码块的背景色也设置为深色 */
   color: #dcdcdc;
-  /* 代码文字颜色设置为浅色 */
 }
 
 .container {
   display: flex;
   flex-direction: column;
   height: 100%;
-  /* 高度为100%，确保占据整个页面 */
   max-width: 100vw;
-
 }
 
 .nav {
-  /* 使用Flexbox布局 */
+  display: flex;
   justify-content: space-between;
-  /* 宽度均匀分布，项目之间的间距默认相等 */
   background-color: #333;
-  /* 导航栏背景色为深色 */
   padding: 20px;
   text-align: center;
   color: #ffffff;
-  /* 导航栏文本颜色设置为白色 */
   font-size: 24px;
   flex-shrink: 0;
-  /* 确保导航栏不被压缩 */
+}
+
+.nav ul {
+  margin: 0;
+  padding: 0;
+}
+
+.nav ul li {
+  display: inline-block;
+  margin-right: 20px;
+  /* 可选：用于控制每个列表项之间的间距 */
 }
 
 .content {
   display: flex;
   flex: 1;
-  /* 让content区域占据剩余的空间 */
   padding: 20px;
+  overflow: hidden;
+  /* 避免内容溢出 */
 }
 
 .main {
@@ -71,6 +68,11 @@ code {
   background-color: #1e1e1e;
   color: #f0f0f0;
   padding: 20px;
+  overflow-y: auto;
+  /* 允许主内容区域滚动 */
+  max-height: 100%;
+  transition: flex-basis 0.3s ease;
+  /* 添加平滑过渡效果 */
 }
 
 .sidebar {
@@ -78,34 +80,35 @@ code {
   background-color: #292929;
   color: #d3d3d3;
   padding: 20px;
+  overflow-y: auto;
+  /* 允许侧边栏单独滚动 */
+  max-height: 100%;
+  transition: flex-basis 0.3s ease;
+  /* 添加平滑过渡效果 */
 }
 
 .main,
 .sidebar {
   word-wrap: break-word;
-  /* 允许长单词在必要时换行 */
   word-break: break-word;
-  /* 长单词会被强制换行 */
   overflow-wrap: break-word;
-  /* 允许长单词在必要时换行 */
-  word-break: break-word;
-  /* 强制长单词换行 */
   white-space: normal;
-  /* 保证文本正常换行 */
 }
 
+/* 动态样式 - 当侧边栏隐藏时，主内容区域占满整个宽度 */
+.main.full-width {
+  flex-basis: 100%;
+}
 
-
+/* 链接样式 */
 a {
   color: #64b5f6;
-  /* 链接使用浅蓝色，和暗色背景形成对比 */
 }
 
+/* 按钮样式 */
 button {
   background-color: #444;
-  /* 按钮背景色 */
   color: #fff;
-  /* 按钮文字颜色 */
   border: none;
   padding: 10px 20px;
   cursor: pointer;
@@ -113,23 +116,21 @@ button {
 
 button:hover {
   background-color: #555;
-  /* 按钮悬停时颜色略微变亮 */
 }
 
+/* 响应式设计：在小屏幕时，侧边栏和主内容堆叠显示 */
 @media (max-width: 768px) {
 
   .main,
   .sidebar {
     flex-basis: 100%;
-    /* 小屏幕时，主内容区和侧边栏垂直堆叠 */
     padding: 10px;
   }
 }
 
+/* 图片和代码段样式 */
 img,
 code {
   max-width: 100%;
-  /* 图片和代码段最大宽度为容器的100% */
   height: auto;
-  /* 保持图片的纵横比 */
 }

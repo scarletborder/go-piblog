@@ -1,11 +1,12 @@
-import React, { useState, useEffect, useRef } from "react";
-import ReactMarkdown from "react-markdown";
-import rehypeSlug from "rehype-slug";
+import React, { useState, useEffect, useRef, useContext } from "react";
 import remarkParse from 'remark-parse';
 import { unified } from 'unified';
+import { SidebarContext } from '../context/SidebarContext';
 import { visit } from "unist-util-visit";
 
 function PostDetailSideBar({ content }) {
+    const { sidebarVisible } = useContext(SidebarContext);
+
     const [toc, setToc] = useState([]);
     const [copySuccess, setCopySuccess] = useState(""); // 控制提示框的状态
     const [showTooltip, setShowTooltip] = useState(false); // 控制是否显示提示框
@@ -17,16 +18,29 @@ function PostDetailSideBar({ content }) {
         const extractHeadings = () => {
             const tree = unified().use(remarkParse).parse(content);
             const headings = [];
+            const parentStack = []; // 栈，存储当前层级中的父标题
 
-            // 访问 AST 树，提取标题
-            visit(tree, 'heading', (node) => {
-                const text = node.children[0].value;
-                const level = node.depth;
-                const id = text.toLowerCase().replace(/\s+/g, '-'); // 生成 id
-                headings.push({ text, level, id });
+            visit(tree, "heading", (node) => {
+                const text = node.children[0].value; // 获取标题的文本内容
+                const level = node.depth; // 获取标题的层级
+
+                // 栈处理：弹出比当前层级大的标题（即低层级的标题）
+                while (parentStack.length > 0 && parentStack[parentStack.length - 1].level >= level) {
+                    parentStack.pop();
+                }
+
+                // 拼接ID，如果有父标题，则将父标题的ID与当前标题拼接
+                const parent = parentStack.length > 0 ? parentStack[parentStack.length - 1].id : '';
+                const currentId = `${parent}${parent ? '-' : ''}${text.toLowerCase().replace(/\s+/g, '-')}`;
+
+                // 将当前标题加入队列
+                headings.push({ text, level, id: currentId });
+
+                // 将当前标题压入栈，作为下一个可能的父标题
+                parentStack.push({ id: currentId, level });
             });
 
-            setToc(headings);
+            setToc(headings); // 设置最终生成的目录
         };
 
         extractHeadings();
@@ -104,7 +118,7 @@ function PostDetailSideBar({ content }) {
         };
     }, [showTooltip]);
 
-    return (
+    return (sidebarVisible && (
         <div className="sidebar" style={{ position: 'relative' }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                 <h2 style={{ margin: 0 }}>Table of Contents</h2>
@@ -150,7 +164,7 @@ function PostDetailSideBar({ content }) {
                 ))}
             </ul>
         </div>
-    );
+    ));
 }
 
 export default PostDetailSideBar;

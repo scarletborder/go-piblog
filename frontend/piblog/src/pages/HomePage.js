@@ -3,6 +3,9 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import NavBar from '../components/NavBar';
 import PostList from "../components/PostList";
+import Sidebar from "../components/indexSidebar";
+
+import { SidebarContext, SidebarProvider } from '../context/SidebarContext';
 
 const HomePage = () => {
     const [post_ids, setPostIds] = useState([]);
@@ -24,29 +27,32 @@ const HomePage = () => {
     }, []);
 
     return (
-        <div className='container'>
-            <NavBar />
+        <SidebarProvider>
+            <div className='container'>
+                <NavBar />
 
-            <div className='content'>
-                <div className='main'>
-                    <h1>test site</h1>
+                <div className='content'>
+                    <SidebarContext.Consumer>
+                        {({ sidebarVisible }) => (
+                            <div className={`main ${sidebarVisible ? '' : 'full-width'}`}>
+                                <h1>test site</h1>
 
-                    <h2>Recommend Posts List</h2>
+                                <h2>Recommend Posts List</h2>
 
-                    <h2>Latest Posts List</h2>
-                    <PostList
-                        ids={post_ids}
-                    />
+                                <h2>Latest Posts List</h2>
+                                <PostList
+                                    ids={post_ids}
+                                />
+                            </div>
+                        )}
+                    </SidebarContext.Consumer>
+                    <Sidebar />
+
                 </div>
 
-                <div className='sidebar'>
-                    aaa
-                </div>
 
             </div>
-
-
-        </div>
+        </SidebarProvider>
     );
 };
 

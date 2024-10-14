@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom';
 import NavBar from '../components/NavBar';
 import PostDetail from "../components/PostDetails";
 import PostDetailSideBar from "../components/PostDetailSidebar";
+import { SidebarContext, SidebarProvider } from '../context/SidebarContext';
 
 const PostPage = () => {
     const { id } = useParams(); // 获取 URL 中的 id 参数
@@ -22,21 +23,27 @@ const PostPage = () => {
     }, [id]);
 
     return (
-        <div className='container'>
-            <NavBar />
-            <div className='content'>
-                <div className='main'>
-                    <PostDetail
-                        title={post['title']}
-                        tags={post['tags']}
+        <SidebarProvider>
+            <div className='container'>
+                <NavBar />
+                <div className='content'>
+                    <SidebarContext.Consumer>
+                        {({ sidebarVisible }) => (
+                            <div className={`main ${sidebarVisible ? '' : 'full-width'}`}>
+                                <PostDetail
+                                    title={post['title']}
+                                    tags={post['tags']}
+                                    content={post['content']}
+                                />
+                            </div>
+                        )}
+                    </SidebarContext.Consumer>
+                    <PostDetailSideBar
                         content={post['content']}
                     />
                 </div>
-                <PostDetailSideBar
-                    content={post['content']}
-                />
             </div>
-        </div>
+        </SidebarProvider>
     );
 };
 

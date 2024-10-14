@@ -1,8 +1,11 @@
 // src/components/NavBar.js
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { SidebarContext } from '../context/SidebarContext'
 
 const NavBar = () => {
+    const { toggleSidebar, sidebarVisible } = useContext(SidebarContext);
+
     const [apiStatus, setApiStatus] = useState(false);
     const [statusColor, setStatusColor] = useState('red');
 
@@ -29,27 +32,24 @@ const NavBar = () => {
 
     return (
         <nav className='nav'>
-            <ul style={styles.ulStyle}>
-                <li style={styles.liStyle}><Link to="/">Home</Link></li>
-                <li style={{
-                    ...styles.liStyle,
-                    color: { statusColor }
-                }}>{apiStatus ? 'online' : 'offline'}</li>
-            </ul>
+            <div className='left_list'>
+                <ul>
+                    <li><Link to="/">Home</Link></li>
+                    <li style={{
+                        color: { statusColor }
+                    }}>{apiStatus ? 'online' : 'offline'}</li>
+                </ul>
+            </div>
+            <div className='right_list'>
+                <button onClick={toggleSidebar}>
+                    {sidebarVisible ? '隐藏侧边栏' : '显示侧边栏'}
+                </button>
+            </div>
+
         </nav >
     );
 };
 
-const styles = {
-    ulStyle: {
-        display: 'flex',          // 横向排列
-        listStyleType: 'none',    // 移除默认列表样式
-        padding: 0,               // 移除内边距
-    },
-    liStyle: {
-        marginRight: '20px',
-    }
-};
 
 
 export default NavBar;
