@@ -32,8 +32,14 @@ func (m MongoConfig) ToUri() (uri string) {
 	return
 }
 
+// 用户请求API的细节
+type APILimit struct {
+	MaxBlogNumber int
+}
+
 type Config struct {
 	rest.RestConf
-	Detail        Detail
-	MongoConfig   MongoConfig
+	APILimit    APILimit
+	Detail      Detail
+	MongoConfig MongoConfig
 }

@@ -15,3 +15,6 @@ MongoConfig:
   NodeConfs:
     - Host: redis:6379
       Weight: 100
+
+APILimit:
+  MaxBlogNumber: 10

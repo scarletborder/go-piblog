@@ -35,7 +35,7 @@ const HomePage = () => {
                     <SidebarContext.Consumer>
                         {({ sidebarVisible }) => (
                             <div className={`main ${sidebarVisible ? '' : 'full-width'}`}>
-                                <h1>test site</h1>
+                                <h1>绯境之外 第3代 站点</h1>
 
                                 <h2>Recommend Posts List</h2>
 

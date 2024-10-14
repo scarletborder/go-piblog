@@ -34,15 +34,15 @@ const NavBar = () => {
         <nav className='nav'>
             <div className='left_list'>
                 <ul>
+                    <li style={{ color: "red" }}>绯境之外</li>
                     <li><Link to="/">Home</Link></li>
-                    <li style={{
-                        color: { statusColor }
-                    }}>{apiStatus ? 'online' : 'offline'}</li>
+                    <li><Link to="/archives">Archives</Link></li>
+                    <li>{apiStatus ? OnlineStatusSpan : OfflineStatusSpan}</li>
                 </ul>
             </div>
             <div className='right_list'>
                 <button onClick={toggleSidebar}>
-                    {sidebarVisible ? '隐藏侧边栏' : '显示侧边栏'}
+                    Toggle Sidebar
                 </button>
             </div>
 
@@ -50,6 +50,9 @@ const NavBar = () => {
     );
 };
 
+const OnlineStatusSpan = (<span style={{ color: '#cbdf9a', fontWeight: 'bold' }}>online</span>);
+
+const OfflineStatusSpan = (<span style={{ color: '#f4b0a5', fontWeight: 'bold' }}>offline</span>);
 
 
 export default NavBar;

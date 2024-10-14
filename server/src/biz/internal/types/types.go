@@ -2,17 +2,19 @@
 package types
 
 type BlogBriefResp struct {
-	ID    string   `json:"id"`
-	Title string   `json:"title"`
-	Tags  []string `json:"tags"`
-	Brief string   `json:"brief"`
+	ID         string   `json:"id"`
+	Title      string   `json:"title"`
+	Tags       []string `json:"tags"`
+	Brief      string   `json:"brief"`
+	CreateTime uint64   `json:"c_time"`
 }
 
 type BlogDetailResp struct {
-	ID      string   `json:"id"`
-	Title   string   `json:"title"`
-	Tags    []string `json:"tags"`
-	Content string   `json:"content"`
+	ID         string   `json:"id"`
+	Title      string   `json:"title"`
+	Tags       []string `json:"tags"`
+	Content    string   `json:"content"`
+	CreateTime uint64   `json:"c_time"`
 }
 
 type BlogIdReq struct {
