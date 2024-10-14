@@ -104,7 +104,7 @@ services:
           echo 'Error: LETSENCRYPT_HOST is not set!';
           exit 1;
         fi;
-      certbot certonly --standalone -d $LETSENCRYPT_HOST -d www.$LETSENCRYPT_HOST;
+      timeout 5 certbot certonly --standalone -d $LETSENCRYPT_HOST -d www.$LETSENCRYPT_HOST;
       SLEEPTIME=$(awk 'BEGIN{srand(); print int(rand()*(3600+1))}'); 
       echo "0 0,12 * * * root sleep $SLEEPTIME && certbot renew -q" | sudo tee -a /etc/crontab > /dev/null;
       "
