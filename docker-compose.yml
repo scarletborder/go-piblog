@@ -113,7 +113,7 @@ services:
     build: 
       context: ./frontend/piblog
       dockerfile: Dockerfile.release
-    container_name: frontend_container
+    container_name: frontend_container_release
     depends_on:
       - biz
     ports: 
