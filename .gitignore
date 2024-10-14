@@ -10,3 +10,6 @@ tmp/
 data/mongo/*
 data/redis/*
 data/etcd/*
+
+frontend/letsencrypt/*
+!frontend/letsencrypt/README

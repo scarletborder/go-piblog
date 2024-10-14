@@ -75,15 +75,48 @@ services:
 
   # Nginx前端
   frontend:
-    build: ./frontend/piblog
+    build: 
+      context: ./frontend/piblog
+      dockerfile: Dockerfile.test
+    container_name: frontend_container
+    depends_on:
+      - biz
+      - certbot
+    ports: 
+    - "80:80"
+    profiles: ["test"]
+    restart: always
+    volumes:
+    - ./frontend/nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+
+  certbot:
+    image: certbot/certbot:v2.11.0
+    volumes:
+    - ./frontend/letsencrypt:/etc/letsencrypt  # 挂载证书目录
+    - ./frontend/nginx/certbot/www:/var/www/certbot  # 用于 certbot 验证
+    entrypoint: >
+      sh -c "trap exit TERM; while :; do certbot certonly --webroot -w /var/www/certbot --email ${LETSENCRYPT_EMAIL} --agree-tos --no-eff-email -d ${LETSENCRYPT_HOST} && break; sleep 12; done"
+  environment:
+    LETSENCRYPT_HOST: scarletborder.cn
+    LETSENCRYPT_EMAIL: baishuibeef@gmail.com
+
+  frontend-release:
+    build: 
+      context: ./frontend/piblog
+      dockerfile: Dockerfile.release
     container_name: frontend_container
     depends_on:
       - biz
     ports: 
     - "80:80"
+    - "443:443"
+    profiles: ["release"]
     restart: always
     volumes:
-    - ./frontend/nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+    - ./frontend/nginx/nginx_release.conf:/etc/nginx/conf.d/default.conf
+    - ./frontend/letsencrypt:/etc/letsencrypt  # 挂载证书目录
+    - ./frontend/nginx/certbot/www:/var/www/certbot  # 用于 certbot 验证
+
 
 
   # 第二个 Go 应用程序
