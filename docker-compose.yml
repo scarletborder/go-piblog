@@ -96,16 +96,16 @@ services:
     - ./frontend/nginx/certbot/www:/var/www/certbot  # 用于 certbot 验证
     environment:
     - LETSENCRYPT_HOST=${LETSENCRYPT_HOST}
-    - LETSENCRYPT_EMAIL=${LETSENCRYPT_EMAIL}
     entrypoint: >
       sh -c "trap exit TERM; 
-      while :; do
-        if [ -z \"$LETSENCRYPT_EMAIL\" ]; then
-          echo 'Error: LETSENCRYPT_EMAIL is not set!';
+      if [ -z \"$LETSENCRYPT_HOST\" ]; then
+          echo 'Error: LETSENCRYPT_HOST is not set!';
           exit 1;
         fi;
-        certbot certonly --webroot -w /var/www/certbot --email $LETSENCRYPT_EMAIL --agree-tos --no-eff-email -d $LETSENCRYPT_HOST && break;
-        sleep 12h;
+      certbot certonly --standalone -d $LETSENCRYPT_HOST -d www.$LETSENCRYPT_HOST;
+      while :; do
+        certbot renew --standalone;
+        sleep 48h;
       done"
     restart: always
 
@@ -116,6 +116,7 @@ services:
     container_name: frontend_container_release
     depends_on:
       - biz
+      - certbot
     ports: 
     - "80:80"
     - "443:443"
