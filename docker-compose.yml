@@ -81,7 +81,6 @@ services:
     container_name: frontend_container
     depends_on:
       - biz
-      - certbot
     ports: 
     - "80:80"
     profiles: ["test"]
@@ -96,8 +95,10 @@ services:
     - ./frontend/nginx/certbot/www:/var/www/certbot  # 用于 certbot 验证
     ports:
     - "80:80"
+    profiles: ["release"]
     environment:
     - LETSENCRYPT_HOST=${LETSENCRYPT_HOST}
+    - SLEEPTIME=${SLEEPTIME}
     entrypoint: >
       sh -c "trap exit TERM; 
       if [ -z \"$LETSENCRYPT_HOST\" ]; then
@@ -105,7 +106,6 @@ services:
           exit 1;
         fi;
       timeout 5 certbot certonly --standalone -d $LETSENCRYPT_HOST -d www.$LETSENCRYPT_HOST;
-      SLEEPTIME=$(awk 'BEGIN{srand(); print int(rand()*(3600+1))}'); 
       echo "0 0,12 * * * root sleep $SLEEPTIME && certbot renew -q" | sudo tee -a /etc/crontab > /dev/null;
       "
     restart: always
@@ -132,7 +132,35 @@ services:
   # 第二个 Go 应用程序
   host:
     # image: my-custom-alpine  # 基于上面定义的镜像
-    build: ./server/src/host
+    build: 
+      context: ./server/src/host
+      dockerfile: Dockerfile.test
+    profiles: ["test"]
+    container_name: host_container
+    depends_on:
+      redis:
+        condition: service_healthy
+      mongodb:
+        condition: service_healthy
+      etcd:
+        condition: service_started
+      custom-alpine:
+        condition: service_started
+    ports:
+      - "8081:8081"
+      - "33946:33946"
+    volumes:
+      - ./server/src/host/etc:/usr/src/app/etc  # 将宿主机的配置文件挂载到容器中
+    environment:
+      CONFIG_PATH: "/usr/src/app/etc/host.yaml"  # 如果你的应用通过环境变量加载配置
+    # command: ["dlv", "exec", "./host","--headless=true", "--listen=:33946", "--log", "--api-version=2", "--", "-f", "/usr/src/app/etc/host.yaml"]
+    command: ["./host", "-f", "/usr/src/app/etc/host.yaml"]
+  host-release:
+    # image: my-custom-alpine  # 基于上面定义的镜像
+    build: 
+      context: ./server/src/host
+      dockerfile: Dockerfile.release
+    profiles: ["release"]
     container_name: host_container
     depends_on:
       redis:

@@ -2,7 +2,7 @@ Name: host.rpc
 ListenOn: 0.0.0.0:8081
 Etcd:
   Hosts:
-    - http://etcd:2379
+    - etcd:2379
   Key: host.rpc
 Auth: true # 是否开启 Auth 验证
 StrictControl: true # 是否开启严格模式

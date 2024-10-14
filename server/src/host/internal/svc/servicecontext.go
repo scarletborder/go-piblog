@@ -25,10 +25,20 @@ func NewServiceContext(c config.Config) *ServiceContext {
 	ctx := context.Background()
 
 	var err error
-	_, err = rds.DelCtx(ctx, c.Redis.Key)
+	exists, err := rds.ExistsCtx(ctx, c.Redis.Key)
 	if err != nil {
+		logx.Errorf("can not judge whether host's rpc key is existed: %v", err)
 		panic(err)
 	}
+
+	if exists {
+		_, err = rds.DelCtx(ctx, c.Redis.Key)
+		if err != nil {
+			logx.Errorf("can not delete existed host's rpc key: %v", err)
+			panic(err)
+		}
+	}
+
 	for _, v := range c.AuthApps {
 		err = rds.HsetCtx(ctx, c.Redis.Key, v.App, v.Token)
 		if err != nil {
