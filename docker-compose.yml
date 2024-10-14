@@ -161,7 +161,7 @@ services:
       context: ./server/src/host
       dockerfile: Dockerfile.release
     profiles: ["release"]
-    container_name: host_container
+    container_name: host_container_release
     depends_on:
       redis:
         condition: service_healthy
