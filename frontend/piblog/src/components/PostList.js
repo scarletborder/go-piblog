@@ -21,6 +21,7 @@ function PostList({ ids }) {
             }
             return response.json();
         }).then(data => {
+            data.sort((a, b) => b.c_time - a.c_time);
             const tmpLiList = data.map(item => {
                 return (
                     <PostListItem
@@ -29,6 +30,7 @@ function PostList({ ids }) {
                         title={item['title']}
                         tags={item['tags']}
                         brief={item['brief']}
+                        c_time={item['c_time']}
                     />
                 );
             });

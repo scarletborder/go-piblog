@@ -4,7 +4,9 @@ package handler
 import (
 	"net/http"
 
+	archives "biz/internal/handler/archives"
 	blogs "biz/internal/handler/blogs"
+	collection "biz/internal/handler/collection"
 	recommend "biz/internal/handler/recommend"
 	test "biz/internal/handler/test"
 	"biz/internal/svc"
@@ -17,6 +19,27 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 		[]rest.Route{
 			{
 				Method:  http.MethodGet,
+				Path:    "/ping",
+				Handler: test.PingHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/version",
+				Handler: test.VersionHandler(serverCtx),
+			},
+		},
+		rest.WithPrefix("/v1"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				Method:  http.MethodGet,
+				Path:    "/info/:id",
+				Handler: blogs.GetBlogBriefHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
 				Path:    "/content/:id",
 				Handler: blogs.GetBlogHandler(serverCtx),
 			},
@@ -24,11 +47,6 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Method:  http.MethodPost,
 				Path:    "/info",
 				Handler: blogs.GetBlogBriefsHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodGet,
-				Path:    "/info/:id",
-				Handler: blogs.GetBlogBriefHandler(serverCtx),
 			},
 		},
 		rest.WithPrefix("/v1/blog"),
@@ -49,15 +67,21 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 		[]rest.Route{
 			{
 				Method:  http.MethodGet,
-				Path:    "/ping",
-				Handler: test.PingHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodGet,
-				Path:    "/version",
-				Handler: test.VersionHandler(serverCtx),
+				Path:    "/:page",
+				Handler: archives.GetArchivesBlogIdsHandler(serverCtx),
 			},
 		},
-		rest.WithPrefix("/v1"),
+		rest.WithPrefix("/v1/archives"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				Method:  http.MethodGet,
+				Path:    "/get_page",
+				Handler: collection.GetCollectionPageHandler(serverCtx),
+			},
+		},
+		rest.WithPrefix("/v1/collection"),
 	)
 }

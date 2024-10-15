@@ -42,6 +42,7 @@ func (l *UpdateBlogLogic) UpdateBlog(in *host.UploadBlogReq) (*host.UploadBlogRe
 		resp.Status = true
 		resp.Msg = "success"
 		resp.Id = data.ID.Hex()
+		go clearCache(l.svcCtx.Config)
 	}
 	return &resp, err
 }
