@@ -19,25 +19,15 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 		[]rest.Route{
 			{
 				Method:  http.MethodGet,
-				Path:    "/ping",
-				Handler: test.PingHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodGet,
-				Path:    "/version",
-				Handler: test.VersionHandler(serverCtx),
+				Path:    "/:page",
+				Handler: archives.GetArchivesBlogIdsHandler(serverCtx),
 			},
 		},
-		rest.WithPrefix("/v1"),
+		rest.WithPrefix("/v1/archives"),
 	)
 
 	server.AddRoutes(
 		[]rest.Route{
-			{
-				Method:  http.MethodGet,
-				Path:    "/info/:id",
-				Handler: blogs.GetBlogBriefHandler(serverCtx),
-			},
 			{
 				Method:  http.MethodGet,
 				Path:    "/content/:id",
@@ -48,8 +38,34 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Path:    "/info",
 				Handler: blogs.GetBlogBriefsHandler(serverCtx),
 			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/info/:id",
+				Handler: blogs.GetBlogBriefHandler(serverCtx),
+			},
 		},
 		rest.WithPrefix("/v1/blog"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				Method:  http.MethodGet,
+				Path:    "/get_brief",
+				Handler: collection.GetCollectionBriefHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/get_latest",
+				Handler: collection.GetCollectionLatestHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/get_page",
+				Handler: collection.GetCollectionPageHandler(serverCtx),
+			},
+		},
+		rest.WithPrefix("/v1/collection"),
 	)
 
 	server.AddRoutes(
@@ -67,21 +83,15 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 		[]rest.Route{
 			{
 				Method:  http.MethodGet,
-				Path:    "/:page",
-				Handler: archives.GetArchivesBlogIdsHandler(serverCtx),
+				Path:    "/ping",
+				Handler: test.PingHandler(serverCtx),
 			},
-		},
-		rest.WithPrefix("/v1/archives"),
-	)
-
-	server.AddRoutes(
-		[]rest.Route{
 			{
 				Method:  http.MethodGet,
-				Path:    "/get_page",
-				Handler: collection.GetCollectionPageHandler(serverCtx),
+				Path:    "/version",
+				Handler: test.VersionHandler(serverCtx),
 			},
 		},
-		rest.WithPrefix("/v1/collection"),
+		rest.WithPrefix("/v1"),
 	)
 }

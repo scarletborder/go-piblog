@@ -70,7 +70,6 @@ service biz-api {
 }
 
 // recommend api
-
 @server (
 	prefix: /v1/recommend
 	group:  recommend
@@ -86,48 +85,59 @@ type ArchivesBlogIdsReq {
 }
 
 type ArchivesBlogIdsResp {
-	BlogIdsResp *BlogIdsResp `json:"blogidsresp"`
-	MaxPages    int          `json:"maxpages"`
+	IDs      []string `json:"ids"`
+	MaxPages int      `json:"maxpages"`
 }
 
-@server(
+@server (
 	prefix: /v1/archives
-	group: archives
+	group:  archives
 )
 service biz-api {
 	@handler getArchivesBlogIds
-	get /:page (ArchivesBlogIdsReq) returns(ArchivesBlogIdsResp)
+	get /:page (ArchivesBlogIdsReq) returns (ArchivesBlogIdsResp)
 }
 
 // collection api
+type CollectionLatestResp {
+	IDs []string `json:"ids"`
+}
+
+type CollectionBriefReq {
+	ID string `json:"name"`
+}
+
+type CollectionBriefResp {
+	Name  string `json:"name"`
+	Brief string `json:"brief"`
+}
 
 // 请求现有的collections
 type CollectionPageReq {
 	// TODO: currently is not used,
 	// latter will used to mark different page in differ page of request
 	// if not provided, default value is 0, which means start of pages
-	Page int `json:"page"`
-
-	// TODO: will be used to query
-	Name string `json:"name"`
-}
-
-type CollectionResp {
-	Name  string   `json:"name"`
-	Brief string   `json:"brief"`
-	IDs   []string `json:"ids"`
+	Page int    `json:"page"`
+	ID   string `json:"id"`
 }
 
 type CollectionPageResp {
-	MaxPages        int                   `json:"maxpages"`
-	CollectionResps []*CollectionPageResp `json:"collectionsresps"`
+	MaxPages int      `json:"maxpages"`
+	IDs      []string `json:"ids"`
 }
 
-@server(
+@server (
 	prefix: /v1/collection
-	group: collection
+	group:  collection
 )
 service biz-api {
+	@handler getCollectionLatest
+	get /get_latest returns (CollectionLatestResp)
+
+	@handler getCollectionBrief
+	get /get_brief (CollectionBriefReq) returns (CollectionBriefResp)
+
 	@handler getCollectionPage
 	get /get_page (CollectionPageReq) returns (CollectionPageResp)
 }
+

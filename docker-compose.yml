@@ -10,7 +10,7 @@ services:
   redis:
     image: redis:7.2.6-alpine
     container_name: redis_container
-    ports:
+    expose:
       - "6379:6379"
     volumes:
       - ./data/redis:/data   # 持久化 Redis 数据
@@ -25,7 +25,7 @@ services:
     image: mongo:8.0.1
     container_name: mongodb_container
     restart: always
-    ports:
+    expose:
       - "27017:27017"
     volumes:
       - ./data/mongo:/data/db  # 持久化 MongoDB 数据
@@ -35,7 +35,6 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-    entrypoint: ["mongod" ,"--bind_ip ","127.0.0.1"]
   
   # Etcd 服务
   etcd:
@@ -66,7 +65,7 @@ services:
         condition: service_started
       custom-alpine:
         condition: service_started
-    ports:
+    expose:
       - "8888:8888"
     volumes:
       - ./server/src/biz/etc:/usr/src/app/etc  # 将宿主机的配置文件挂载到容器中

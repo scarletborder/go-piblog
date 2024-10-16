@@ -40,8 +40,6 @@ func (l *GetArchivesBlogIdsLogic) GetArchivesBlogIds(req *types.ArchivesBlogIdsR
 
 	return &types.ArchivesBlogIdsResp{
 		MaxPages: int(page_num),
-		BlogIdsResp: &types.BlogIdsResp{
-			IDs: res,
-		},
+		IDs:      res,
 	}, nil
 }
