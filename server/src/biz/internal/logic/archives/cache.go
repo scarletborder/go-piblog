@@ -17,14 +17,15 @@ import (
 )
 
 const cacheKey string = "cache:archives:page:"
+const pageSize int64 = 10
 
-func GetLatestBlogIds(ctx context.Context, svc svc.ServiceContext, page int64) ([]string, error) {
+func GetArchivesBlogIds(ctx context.Context, svc svc.ServiceContext, page int64) ([]string, error) {
 	var latestBlogIds []string
 	ckey := fmt.Sprintf("%s%d", cacheKey, page)
 
 	cacheData, err := svc.Rds.GetCtx(ctx, ckey)
 
-	if err == redis.Nil { // Redis 缓存中不存在，查询 MongoDB
+	if err == redis.Nil || len(cacheData) == 0 { // Redis 缓存中不存在，查询 MongoDB
 		// MongoDB 查询选项
 		findOptions := options.Find()
 		findOptions.SetSort(bson.D{{Key: "updateAt", Value: -1}})
@@ -66,14 +67,14 @@ func GetLatestBlogIds(ctx context.Context, svc svc.ServiceContext, page int64) (
 			log.Println("Failed to marshal data for Redis:", err)
 			return nil, err
 		}
-		go func() {
+		go func(ckey string) {
 			saveCtx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 			defer cancel()
-			err = svc.Rds.SetexCtx(saveCtx, cacheKey, string(dataToCache), 3600)
-			if err != nil {
-				logx.Error("Failed to set Redis cache:", err)
+			sub_err := svc.Rds.SetexCtx(saveCtx, ckey, string(dataToCache), 3600)
+			if sub_err != nil {
+				logx.Error("Failed to set Redis cache:", sub_err)
 			}
-		}()
+		}(ckey)
 
 	} else if err != nil {
 		logx.Error("Redis error:", err)
@@ -91,28 +92,82 @@ func GetLatestBlogIds(ctx context.Context, svc svc.ServiceContext, page int64) (
 
 // 清除分页缓存
 func clearCache(rdb *redis.Redis) {
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 	pattern := fmt.Sprintf("%s*", cacheKey) // 匹配所有分页缓存键
-	keys, err := rdb.KeysCtx(ctx, pattern)
-	if err != nil {
-		logx.Error("Redis keys error:", err)
-		return
-	}
-
-	// 删除所有匹配的分页缓存键
-	if len(keys) > 0 {
-		_, err = rdb.DelCtx(ctx, keys...)
+	var cursor uint64 = 0
+	for {
+		keys, nextCursor, err := rdb.ScanCtx(ctx, cursor, pattern, 10)
 		if err != nil {
-			logx.Info("Redis delete error:", err)
+			logx.Errorf("Failed to scan keys: %v", err)
+			panic(err)
 		}
+
+		// 打印获取到的键
+		if len(keys) > 0 {
+			_, err = rdb.DelCtx(ctx, keys...)
+			if err != nil {
+				logx.Error("Redis delete error:", err)
+				panic(err)
+			}
+		}
+
+		// 如果游标返回为 0，表示扫描结束
+		if nextCursor == 0 {
+			break
+		}
+
+		// 更新游标，继续扫描
+		cursor = nextCursor
 	}
+	// :max也一起删了
 }
 
-func GetArchivePageNumber(ctx context.Context, conn *monc.Model, rds *redis.Redis) {
+// 获得页数(博文数量 / 10)
+//
+// 页码从0开始依次递增,
+// 如果总量为5,那么将返回1页;总量为15,返回2页
+func GetArchivePageNumber(ctx context.Context, conn *monc.Model, rds *redis.Redis) (int64, error) {
+	var totalPages int64
+	ckey := fmt.Sprintf("%smax", cacheKey)
 
+	cacheData, err := rds.GetCtx(ctx, ckey)
+
+	if err == redis.Nil || cacheData == "" {
+		return initStatPageNum(ctx, conn, rds)
+	} else if err != nil {
+		return 0, err
+	} else {
+		err = json.Unmarshal([]byte(cacheData), &totalPages)
+		if err != nil {
+			logx.Info("Failed to unmarshal cached data:", err)
+			go clearCache(rds)
+			return 0, err
+		}
+		return totalPages, nil
+	}
 }
 
 // Initialize to statistic page numbers
 // and store to redis
-func initStatPageNum() {}
+func initStatPageNum(ctx context.Context, conn *monc.Model, rds *redis.Redis) (int64, error) {
+	var totalPages int64
+	count, err := conn.Collection.CountDocuments(ctx, bson.D{})
+	if err != nil {
+		return 0, err
+	}
+	// 计算总页数
+	totalPages = (count + pageSize - 1) / pageSize // 向上取整
+	dataToCache, err := json.Marshal(totalPages)
+
+	go func(ckey string) {
+		saveCtx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+		defer cancel()
+		err = rds.SetexCtx(saveCtx, ckey, string(dataToCache), 3600)
+		if err != nil {
+			logx.Error("Failed to set Redis cache:", err)
+		}
+	}(fmt.Sprintf("%smax", cacheKey))
+
+	return totalPages, nil
+}

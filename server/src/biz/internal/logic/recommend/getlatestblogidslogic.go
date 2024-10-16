@@ -25,7 +25,7 @@ func NewGetLatestBlogIdsLogic(ctx context.Context, svcCtx *svc.ServiceContext) *
 }
 
 func (l *GetLatestBlogIdsLogic) GetLatestBlogIds() (resp *types.BlogIdsResp, err error) {
-	latestRecords, err := archives.GetLatestBlogIds(l.ctx, *l.svcCtx, 0)
+	latestRecords, err := archives.GetArchivesBlogIds(l.ctx, *l.svcCtx, 0)
 	if err != nil {
 		return
 	}

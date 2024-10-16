@@ -108,7 +108,7 @@ services:
       timeout 5 certbot certonly --standalone -d $LETSENCRYPT_HOST -d www.$LETSENCRYPT_HOST;
       echo "0 0,12 * * * root sleep $SLEEPTIME && certbot renew -q" | sudo tee -a /etc/crontab > /dev/null;
       "
-    restart: always
+    restart: 'none'
 
   frontend-release:
     build: 
