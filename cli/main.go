@@ -40,8 +40,10 @@ func main() {
 	switch os.Args[1] {
 	case "upload":
 		handleUploadCommand(os.Args[2:])
-	case "Stat":
+	case "stat":
 		handleStatCommand(os.Args[2:])
+	case "migrate":
+		handleMigrateCommand(os.Args[2:])
 	default:
 		fmt.Printf("Unknown command: %s\n", os.Args[1])
 		flag.Usage()

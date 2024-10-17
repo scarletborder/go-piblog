@@ -6,6 +6,7 @@ import (
 	"biz/internal/logic/blogs"
 	"biz/internal/svc"
 	"biz/internal/types"
+
 	"github.com/zeromicro/go-zero/rest/httpx"
 )
 
@@ -22,6 +23,8 @@ func GetBlogHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 		if err != nil {
 			httpx.ErrorCtx(r.Context(), w, err)
 		} else {
+			w.Header().Set("Cache-Control", "max-age=1800, public")
+			// TODO: 根据update time来设置			w.Header().Set("Last-Modified", resp)
 			httpx.OkJsonCtx(r.Context(), w, resp)
 		}
 	}

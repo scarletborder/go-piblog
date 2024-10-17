@@ -1,37 +1,15 @@
-package upload
+package markdownparser
 
 import (
-	"context"
-	"fmt"
+	"piblog/src/model"
 	"strings"
 )
 
-type Document struct {
-	Title   string
-	Tags    []string
-	Brief   string
-	Content string
-
-	context context.Context
-}
-
-func (d Document) ToDebugString() string {
-	return fmt.Sprintf("Title: %s\nTags: %v\nBrief: %s\nContent: \n%s\n",
-		d.Title, d.Tags, d.Brief, d.Content)
-}
-
-// 在上传前对Blog进行处理（例如将tags进行统计，创建评论条目）
-type DocumentHandler func(Document)
-
-// Context中需要打印的内容
-type DocumentContextMap struct{}
 
 // 对文件内容进行解析
-func ParseDocument(input string) Document {
+func  ParseDocument(input string) model.Document {
 	lines := strings.Split(input, "\n")
-	var doc Document
-	doc.context = context.WithValue(context.Background(),
-		DocumentContextMap{}, map[string]interface{}{})
+	var doc model.Document
 
 	// 解析 Title
 	for i, line := range lines {

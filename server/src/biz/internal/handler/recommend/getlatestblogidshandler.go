@@ -5,6 +5,7 @@ import (
 
 	"biz/internal/logic/recommend"
 	"biz/internal/svc"
+
 	"github.com/zeromicro/go-zero/rest/httpx"
 )
 
@@ -15,6 +16,7 @@ func GetLatestBlogIdsHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 		if err != nil {
 			httpx.ErrorCtx(r.Context(), w, err)
 		} else {
+			w.Header().Set("Cache-Control", "max-age=30, public")
 			httpx.OkJsonCtx(r.Context(), w, resp)
 		}
 	}
