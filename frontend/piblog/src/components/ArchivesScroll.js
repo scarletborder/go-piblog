@@ -34,8 +34,24 @@ function ArchivesScroll({ setIds }) {
     // 渲染页码按钮
     const renderPagination = () => {
         const pages = [];
-        const leftLimit = Math.max(currentPage - 4, 0); // 向左最多显示 4 页
-        const rightLimit = Math.min(currentPage + 4, maxPage - 1); // 向右最多显示 4 页
+        const totalVisiblePages = Math.min(9, maxPage); // 至少显示9个页码，最多显示 maxPage 个
+
+        let leftLimit = currentPage - Math.floor(totalVisiblePages / 2); // 计算左边限制
+        let rightLimit = currentPage + Math.floor(totalVisiblePages / 2); // 计算右边限制
+
+        // 调整当左边超出界限时
+        if (leftLimit < 0) {
+            rightLimit += Math.abs(leftLimit);
+            leftLimit = 0;
+        }
+
+        // 调整当右边超出界限时
+        if (rightLimit >= maxPage) {
+            leftLimit -= (rightLimit - maxPage + 1);
+            rightLimit = maxPage - 1;
+        }
+
+        leftLimit = Math.max(leftLimit, 0); // 确保左边界不小于0
 
         // 生成页码按钮
         for (let i = leftLimit; i <= rightLimit; i++) {
@@ -45,7 +61,7 @@ function ArchivesScroll({ setIds }) {
                     onClick={() => handlePageClick(i)}
                     style={{
                         margin: "0 5px",
-                        backgroundColor: i === currentPage ? "lightblue" : "white"
+                        backgroundColor: i === currentPage ? 'rgb(101,101,101)' : '#444'
                     }}
                 >
                     {i + 1}
@@ -60,5 +76,6 @@ function ArchivesScroll({ setIds }) {
         <div pages>{renderPagination()}</div>
     );
 }
+
 
 export default ArchivesScroll;
