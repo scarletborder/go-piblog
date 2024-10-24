@@ -21,6 +21,9 @@ function PostDetailSideBar({ content }) {
             const parentStack = []; // 栈，存储当前层级中的父标题
 
             visit(tree, "heading", (node) => {
+                if (node.children[0] === undefined) {
+                    return;
+                }
                 const text = node.children[0].value; // 获取标题的文本内容
                 const level = node.depth; // 获取标题的层级
 

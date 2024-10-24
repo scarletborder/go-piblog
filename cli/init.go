@@ -31,6 +31,7 @@ const templateFile = `# Example Title
 The text following tags will be recognized as brief text.  
 
 Brief text ends when meet '---'.  
+
 ---
 
 Some texts which only display in main text  
